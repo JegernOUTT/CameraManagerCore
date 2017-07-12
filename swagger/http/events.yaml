@@ -1,0 +1,453 @@
+swagger: '2.0'
+
+info:
+  title: CameraManagerCore
+  description: Описание event схемы
+  version: "0.1.0"
+
+host: "10.10.20.14:8085"
+schemes: ["http"]
+
+paths:
+  /events/create_event:
+    get:
+      description: Создание события
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+        
+        -
+          name: name
+          in: query
+          description: Имя события
+          required: true
+          type: string
+        
+        -  
+          name: description
+          in: query
+          description: Описание события
+          required: true
+          type: string
+        
+        - 
+          name: camera_id
+          in: query
+          description: Камера, назначенная на событие
+          required: true
+          type: integer
+          
+        -  
+          name: category
+          in: query
+          description: Массив категорий
+          required: true
+          type: string
+          
+        -  
+          name: on_create_action
+          in: query
+          description: Взаимодействие, исполняемое при создании события
+          required: true
+          type: string
+          
+        -  
+          name: on_acknowledge_action
+          in: query
+          description: Взаимодействие, исполняемое при квитировании события
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Созданное событие
+          schema:
+            $ref: "#/definitions/EventModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно создать событие
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /events/ack_event:
+    get:
+      description: Квитирование события
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+        -
+          name: event_hash
+          in: query
+          description: Уникальная строка, иденцифицирующая событие
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Квитированное событие
+          schema:
+            $ref: "#/definitions/EventModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+                       Невозможно найти событие с заданным хэшем
+                       Невозможно квитировать событие
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /events/remove_event:
+      get:
+        description: Удаление события из системы и БД
+
+        produces:
+          - application/json
+
+        parameters:
+          -
+            name: session_hash
+            in: header
+            description: Уникальная строка, иденцифицирующая сессию
+            required: true
+            type: string
+
+          -
+            name: event_hash
+            in: query
+            description: Уникальная строка, иденцифицирующая событие
+            required: true
+            type: string
+
+        responses:
+          200:
+            description: Удалённое событие
+            schema:
+              $ref: "#/definitions/EventModel"
+          401:
+            description: Сессия со входным session_hash не существует в системе
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          403:
+            description: У текущего пользователя нет необходимых разрешений
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          400:
+            description: Не удалось найти все обязательные входные параметры
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          500:
+            description: Неизвестная ошибка
+                         Невозможно найти событие с заданным хэшем
+            schema:
+              $ref: "#/definitions/OperationResponse"
+
+  /events/all/get_events:
+      get:
+        description: Получение событий
+
+        produces:
+          - application/json
+
+        parameters:
+          -
+            name: session_hash
+            in: header
+            description: Уникальная строка, иденцифицирующая сессию
+            required: true
+            type: string
+
+          -
+            name: historical
+            in: query
+            description: Получение только исторических событий
+            required: false
+            type: boolean
+
+          -
+            name: count
+            in: query
+            description: Получение определенного числа событий
+            required: false
+            type: integer
+
+        responses:
+          200:
+            description: Массив событий
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/EventModel"
+          401:
+            description: Сессия со входным session_hash не существует в системе
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          403:
+            description: У текущего пользователя нет необходимых разрешений
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          400:
+            description: Не удалось найти все обязательные входные параметры
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          500:
+            description: Неизвестная ошибка
+            schema:
+              $ref: "#/definitions/OperationResponse"
+
+  /events/all/get_periodic_events:
+      get:
+        description: Получение событий за определённый период
+
+        produces:
+          - application/json
+
+        parameters:
+          -
+            name: session_hash
+            in: header
+            description: Уникальная строка, иденцифицирующая сессию
+            required: true
+            type: string
+
+          -
+            name: from
+            in: query
+            description: Точка начала отсчёта всех событий
+            required: true
+            type: integer
+
+          -
+            name: to
+            in: query
+            description: Точка конца отсчёта всех событий
+            required: true
+            type: integer
+
+        responses:
+          200:
+            description: Массив событий
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/EventModel"
+          401:
+            description: Сессия со входным session_hash не существует в системе
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          403:
+            description: У текущего пользователя нет необходимых разрешений
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          400:
+            description: Не удалось найти все обязательные входные параметры
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          500:
+            description: Неизвестная ошибка
+            schema:
+              $ref: "#/definitions/OperationResponse"
+
+  /events/my/get_events:
+      get:
+        description: Получение событий
+
+        produces:
+          - application/json
+
+        parameters:
+          -
+            name: session_hash
+            in: header
+            description: Уникальная строка, иденцифицирующая сессию
+            required: true
+            type: string
+
+          -
+            name: historical
+            in: query
+            description: Получение только исторических событий
+            required: false
+            type: boolean
+
+          -
+            name: count
+            in: query
+            description: Получение определенного числа событий
+            required: false
+            type: integer
+
+        responses:
+          200:
+            description: Массив событий
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/EventModel"
+          401:
+            description: Сессия со входным session_hash не существует в системе
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          400:
+            description: Не удалось найти все обязательные входные параметры
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          500:
+            description: Неизвестная ошибка
+            schema:
+              $ref: "#/definitions/OperationResponse"
+
+  /events/my/get_periodic_events:
+      get:
+        description: Получение событий за определённый период
+
+        produces:
+          - application/json
+
+        parameters:
+          -
+            name: session_hash
+            in: header
+            description: Уникальная строка, иденцифицирующая сессию
+            required: true
+            type: string
+
+          -
+            name: from
+            in: query
+            description: Точка начала отсчёта всех событий
+            required: true
+            type: integer
+
+          -
+            name: to
+            in: query
+            description: Точка конца отсчёта всех событий
+            required: true
+            type: integer
+
+        responses:
+          200:
+            description: Массив событий
+            schema:
+              type: array
+              items:
+                $ref: "#/definitions/EventModel"
+          401:
+            description: Сессия со входным session_hash не существует в системе
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          400:
+            description: Не удалось найти все обязательные входные параметры
+            schema:
+              $ref: "#/definitions/OperationResponse"
+          500:
+            description: Неизвестная ошибка
+            schema:
+              $ref: "#/definitions/OperationResponse"
+
+
+definitions:
+  EventModel:
+    type: object
+    properties:
+      hash:
+        type: string
+        description: Уникальная строка, идентифицирующая событие
+
+      name:
+        type: string
+        description: Имя события
+
+      description:
+        type: string
+        description: Описание события
+
+      camera_id:
+        type: integer
+        description: Камера, назначенная на событие
+
+      category:
+        type: string
+        description: Массив категорий
+
+      created_session_hash:
+        type: string
+        description: Хэш сессии, создавшей событие
+
+      created_time:
+        type: integer
+        description: Время создания события (unix time with ms)
+
+      on_create_action:
+        type: string
+        description: Взаимодействие, исполняемое при создании события
+
+      processed:
+        type: boolean
+        description: Статус исполнения взаимодействия, исполняемого при создании события
+
+      processed_time:
+        type: integer
+        description: Время исполнения взаимодействия, исполняемого при создании события (unix time with ms)
+
+      acknowledged:
+        type: string
+        description: Статус квитирования
+
+      acknowledge_session_hash:
+        type: string
+        description: Хэш сессии, квитировавшей событие
+
+      acknowledged_time:
+        type: integer
+        description: Время квитирования события (unix time with ms)
+
+      acknowledged_action:
+        type: string
+        description: Взаимодействие, исполняемое при квитировании события
+
+  OperationResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+

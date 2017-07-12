@@ -1,0 +1,102 @@
+swagger: '2.0'
+
+info:
+  title: CameraManagerCore
+  description: Описание login схемы
+  version: "0.1.0"
+
+host: "10.10.20.14:8085"
+schemes: ["http"]
+
+paths:
+  /login:
+    get:
+      description: Авторизация пользователя, получение session_hash
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: name
+          in: query
+          description: Имя пользователя
+          required: true
+          type: string
+
+        -
+          name: password
+          in: query
+          description: Пароль
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Пользователь найден
+          schema:
+            $ref: "#/definitions/LoginResponse"
+            
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        
+        500:
+          description: Не удалось найти пользователя с запрашиваемыми данными
+          schema:
+            $ref: "#/definitions/OperationResponse"
+            
+  /logout:
+    get:
+      description: Удаление сессии
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Сессия успешно удалена
+          schema:
+            $ref: "#/definitions/OperationResponse"
+            
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+            
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        
+definitions:
+  LoginResponse:
+    type: object
+    properties:
+      session_hash:
+        type: string
+        description: Уникальная строка, иденцифицирующая сессию. 
+                     Для остальных запросов необходимо добавлять это значение в htpp headers
+
+  OperationResponse:
+    type: object
+    properties:
+      code: 
+        type: integer
+      message: 
+        type: string
+

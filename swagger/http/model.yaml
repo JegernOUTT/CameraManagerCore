@@ -1,0 +1,730 @@
+swagger: '2.0'
+
+info:
+  title: CameraManagerCore
+  description: Описание model схемы
+  version: "0.1.0"
+
+host: "10.10.20.14:8085"
+schemes: ["http"]
+
+paths:
+  /model/camera/get:
+    get:
+      description: "Получение всех камер в БД"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращаются камеры
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /model/camera/add:
+    post:
+      description: "Добавление камеры в БД"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: name
+          in: query
+          description: Имя камеры
+          required: true
+          type: string
+
+        -
+          name: url
+          in: query
+          description: Url адрес камеры
+          required: true
+          type: string
+
+        -
+          name: login
+          in: query
+          description: Логин для взаимодействия с камерой
+          required: true
+          type: string
+
+        -
+          name: password
+          in: query
+          description: Пароль для взаимодействия с камерой
+          required: true
+          type: string
+
+        -
+          name: interaction_id
+          in: query
+          description: Тип взаимодействия
+          required: true
+          type: integer
+
+        -
+          name: idle_timeout_sec
+          in: query
+          description: Время ожидания для перехода в нормальное положение
+          required: true
+          type: integer
+
+        -
+          name: on_idle_action
+          in: query
+          description: Действие для перехода в нормальное положение
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается добавленная камера
+          schema:
+            $ref: "#/definitions/CameraModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /model/camera/change:
+    post:
+      description: "Изменение камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: name
+          in: query
+          description: Имя камеры (Для изменения)
+          required: false
+          type: string
+
+        -
+          name: url
+          in: query
+          description: Url адрес камеры (Для изменения)
+          required: false
+          type: string
+
+        -
+          name: login
+          in: query
+          description: Логин для взаимодействия с камерой (Для изменения)
+          required: false
+          type: string
+
+        -
+          name: password
+          in: query
+          description: Пароль для взаимодействия с камерой (Для изменения)
+          required: false
+          type: string
+
+        -
+          name: interaction_id
+          in: query
+          description: Тип взаимодействия (Для изменения)
+          required: false
+          type: integer
+
+        -
+          name: idle_timeout_sec
+          in: query
+          description: Время ожидания для перехода в нормальное положение (Для изменения)
+          required: false
+          type: integer
+
+        -
+          name: on_idle_action
+          in: query
+          description: Действие для перехода в нормальное положение (Для изменения)
+          required: false
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается изменённая камера
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /model/camera/remove:
+    post:
+      description: "Удаление камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается удалённая камера
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+
+  /model/camera_action/get:
+    get:
+      description: "Получение всех активностей по камерам в БД"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращаются активности по камерам
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraActionsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /model/camera_action/add:
+    post:
+      description: "Добавление активности по камере в БД"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: succeed
+          in: query
+          description: Успех завершения взаимодействия
+          required: true
+          type: boolean
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: session_hash
+          in: query
+          description: Взаимодействующая сессия
+          required: true
+          type: string
+
+        -
+          name: time
+          in: query
+          description: Время взаимодейсвия (unix time with ms)
+          required: true
+          type: integer
+
+        -
+          name: action
+          in: query
+          description: Взаимодействие (в json формате)
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается добавленная активность по камере
+          schema:
+            $ref: "#/definitions/CameraActionsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /model/camera_action/change:
+    post:
+      description: "Изменение активности по камере"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: id
+          in: query
+          description: Номер активности
+          required: true
+          type: integer
+
+        -
+          name: succeed
+          in: query
+          description: Успех завершения взаимодействия
+          required: false
+          type: boolean
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: false
+          type: integer
+
+        -
+          name: session_hash
+          in: query
+          description: Взаимодействующая сессия
+          required: false
+          type: string
+
+        -
+          name: time
+          in: query
+          description: Время взаимодейсвия (unix time with ms)
+          required: false
+          type: integer
+
+        -
+          name: action
+          in: query
+          description: Взаимодействие (в json формате)
+          required: false
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается изменённая активность по камере
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraActionsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /model/camera_action/remove:
+    post:
+      description: "Удаление активности по камере"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: id
+          in: query
+          description: Номер камеры
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается удалённая активность по камере
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraActionsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+definitions:
+  OperationResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+
+  EventModel:
+    type: object
+    properties:
+      hash:
+        type: string
+        description: Уникальная строка, идентифицирующая событие
+
+      name:
+        type: string
+        description: Имя события
+
+      description:
+        type: string
+        description: Описание события
+
+      camera_id:
+        type: integer
+        description: Камера, назначенная на событие
+
+      category:
+        type: string
+        description: Массив категорий
+
+      created_session_hash:
+        type: string
+        description: Хэш сессии, создавшей событие
+
+      created_time:
+        type: integer
+        description: Время создания события (unix time with ms)
+
+      on_create_action:
+        type: string
+        description: Взаимодействие, исполняемое при создании события
+
+      processed:
+        type: boolean
+        description: Статус исполнения взаимодействия, исполняемого при создании события
+
+      processed_time:
+        type: integer
+        description: Время исполнения взаимодействия, исполняемого при создании события (unix time with ms)
+
+      acknowledged:
+        type: string
+        description: Статус квитирования
+
+      acknowledge_session_hash:
+        type: string
+        description: Хэш сессии, квитировавшей событие
+
+      acknowledged_time:
+        type: integer
+        description: Время квитирования события (unix time with ms)
+
+      acknowledged_action:
+        type: string
+        description: Взаимодействие, исполняемое при квитировании события
+
+  CameraModel:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Имя камеры
+
+      url:
+        type: string
+        description: Url адрес камеры
+
+      login:
+        type: string
+        description: Логин для взаимодействия с камерой
+
+      password:
+        type: string
+        description: Пароль для взаимодействия с камерой
+
+      interaction_id:
+        type: integer
+        description: Тип взаимодействия
+
+      idle_timeout_sec:
+        type: integer
+        description: Время ожидания для перехода в нормальное положение
+
+      on_idle_action:
+        type: string
+        description: Действие для перехода в нормальное положение
+
+  PermissionModel:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Название разрешения
+      regex_url:
+        type: string
+        description: Regex паттерн
+
+  UserModel:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Имя пользователя
+      password:
+        type: string
+        description: Пароль пользователя
+      event_categories:
+        type: string
+        description: Доступные категории событий
+
+  SettingsModel:
+    type: object
+    properties:
+      registration:
+        type: array
+        items:
+          type: integer
+          format: uint8
+        description: Бинарный регистрационный файл
+      http_port:
+        type: integer
+        description: Порт для http rest сервера
+      ws_camera_port:
+        type: integer
+        description: Порт для ws_camera сервера
+      ws_model_port:
+        type: integer
+        description: Порт для ws_model сервера
+      ws_events_port:
+        type: integer
+        description: Порт для ws_events сервера
+
+  SessionsModel:
+    type: object
+    properties:
+      session_hash:
+        type: string
+        description: Уникальная строка, иденцифицирующая сессию
+      user_id:
+        type: integer
+        description: Номер пользователя
+      creation_time:
+        type: integer
+        description: Время создания сессии (unix time with ms)
+      destruction_time:
+        type: integer
+        description: Время уничтожения сессии (unix time with ms)
+
+  CameraActionsModel:
+    type: object
+    properties:
+      succeed:
+        type: boolean
+        description: Успех завершения взаимодействия
+      camera_id:
+        type: integer
+        description: Номер камеры
+      session_hash:
+        type: string
+        description: Взаимодействующая сессия
+      time:
+        type: integer
+        description: Время взаимодейсвия (unix time with ms)
+      action:
+        type: string
+        description: Взаимодействие (в json формате)
+
+  UserCameras:
+    type: object
+    properties:
+      user_id:
+        type: string
+        description: Номер пользователя
+      camera_id:
+        type: string
+        description: Номер камеры
+
+  UserPermissions:
+    type: object
+    properties:
+      user_id:
+        type: string
+        description: Имя пользователя
+      permissions_id:
+        type: string
+        description: Номер разрешения

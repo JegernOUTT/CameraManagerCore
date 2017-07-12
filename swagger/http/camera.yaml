@@ -1,0 +1,1545 @@
+swagger: "2.0"
+
+info:
+  title: CameraManagerCore
+  description: Описание camera схемы
+  version: "0.1.0"
+
+schemes: ["http"]
+
+paths:
+  /camera/ptz/relative_move:
+    post:
+      description: "Relative move"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: extra
+          in: body
+          description: Дополнительные данные, необходимые для запроса
+          required: true
+          schema:
+            $ref: "#/definitions/RelativeMove"
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/continuous_move:
+    post:
+      description: "Continuous move"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: extra
+          in: body
+          description: Дополнительные данные, необходимые для запроса
+          required: true
+          schema:
+            $ref: "#/definitions/ContinuousMove"
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/absolute_move:
+    post:
+      description: "Absolute move"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: extra
+          in: body
+          description: Дополнительные данные, необходимые для запроса
+          required: true
+          schema:
+            $ref: "#/definitions/AbsoluteMove"
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/stop:
+    post:
+      description: "Stop при continuous move"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: pan_tilt
+          in: query
+          description: Остановка движения по осям x / y
+          required: true
+          type: boolean
+
+        -
+          name: zoom
+          in: query
+          description: Остановка движения зуммирования
+          required: true
+          type: boolean
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/get_presets:
+    get:
+      description: "Получение списка пресетов"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Preset"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/go_to_preset:
+    post:
+      description: "Перейти по пресету"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: preset_token
+          in: query
+          description: Токен пресета для перехода
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/change_preset:
+    post:
+      description: "Изменение пресета. Под старым пресетом сохраняется новое имя и текущая позиция камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: preset_token
+          in: query
+          description: Токен пресета, который необходимо изменить
+          required: true
+          type: string
+
+        -
+          name: new_preset_name
+          in: query
+          description: Новое имя пресета
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается измененный пресет
+          schema:
+            $ref: "#/definitions/Preset"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/add_preset:
+    post:
+      description: "Добавление пресета"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: preset_name
+          in: query
+          description: Имя пресета
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается новый пресет
+          schema:
+            $ref: "#/definitions/Preset"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/remove_preset:
+    post:
+      description: "Удаление пресета"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: preset_token
+          in: query
+          description: Токен удаляемого пресета
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Запрос выполнен успешно
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/go_to_home:
+    post:
+      description: "Переход на домашнюю препозицию"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: extra
+          in: body
+          description: Дополнительные данные, необходимые для запроса
+          required: true
+          schema:
+            $ref: "#/definitions/PTZSpeed"
+
+      responses:
+        200:
+          description: Запрос выполнен успешно
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/set_home:
+    post:
+      description: "Установка домашней препозиции"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/get_status:
+    get:
+      description: "Запрос на получение ptz статуса о состоянии камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно
+          schema:
+            $ref: "#/definitions/PTZStatus"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/get_capabilities:
+    get:
+      description: "Запрос на получение ptz возможностей камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно
+          schema:
+            $ref: "#/definitions/PTZCapabilities"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/ptz/get_nodes:
+    get:
+      description: "Запрос на получение информации о ptz узлах камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PTZNode"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/device/camera_reboot:
+    post:
+      description: "Перезагрузка камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/device/get_device_information:
+    get:
+      description: "Информация о камере"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/DeviceInformation"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+
+  /camera/media/get_media_profiles:
+    get:
+      description: "Получение всех медиа профилей камеры"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Profile"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/media/get_stream_uri:
+    post:
+      description: "Получение url для трансляции"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+        -
+          name: extra
+          in: body
+          description: Дополнительные данные, необходимые для запроса
+          required: true
+          schema:
+            $ref: "#/definitions/StreamUrl"
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/MediaUri"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/media/start_multicast:
+    post:
+      description: "Начать multicast-вещание"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /camera/media/stop_multicast:
+    post:
+      description: "Остановить multicast-вещание"
+      produces:
+        - application/json
+
+      consumes:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+        -
+          name: camera_id
+          in: query
+          description: Номер камеры
+          required: true
+          type: integer
+
+      responses:
+        200:
+          description: Запрос выполнен успешно, возвращается результат
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        503:
+          description: PTZ запрос выполнен, однако возникла ошибка на другой стороне
+          schema:
+            $ref: "#/definitions/OnvifResult"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка / Невозможно выполнить PTZ запрос
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+
+definitions:
+
+  OperationResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+
+  OnvifResult:
+    type: object
+    properties:
+      is_error:
+        type: boolean
+      error_code:
+        type: integer
+      soap_error:
+        type: string
+      full_error:
+        type: string
+
+  Vector1D:
+    type: object
+    properties:
+      x:
+        type: number
+      space:
+        type: string
+
+  Vector2D:
+    type: object
+    properties:
+      x:
+        type: number
+      y:
+        type: number
+      space:
+        type: string
+
+  PTZVector:
+    type: object
+    properties:
+      pan_tilt:
+        $ref: "#/definitions/Vector2D"
+      zoom:
+        $ref: "#/definitions/Vector1D"
+
+  PTZSpeed:
+    type: object
+    properties:
+      pan_tilt:
+        $ref: "#/definitions/Vector2D"
+      zoom:
+        $ref: "#/definitions/Vector1D"
+
+  PanTiltLimits:
+    type: object
+    properties:
+      uri:
+        type: string
+      x_range:
+        $ref: "#/definitions/FRange"
+      y_range:
+        $ref: "#/definitions/FRange"
+
+  ZoomLimits:
+    type: object
+    properties:
+      uri:
+        type: string
+      x_range:
+        $ref: "#/definitions/FRange"
+
+  RelativeMove:
+    type: object
+    properties:
+      translation:
+        $ref: "#/definitions/PTZVector"
+      speed:
+        $ref: "#/definitions/PTZSpeed"
+
+  ContinuousMove:
+    type: object
+    properties:
+      speed:
+        $ref: "#/definitions/PTZSpeed"
+      timeout:
+        type: integer
+
+  AbsoluteMove:
+    type: object
+    properties:
+      speed:
+        $ref: "#/definitions/PTZSpeed"
+      position:
+        $ref: "#/definitions/PTZVector"
+
+  Preset:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Имя препозиции
+      token:
+        type: string
+        description: Номер препозиции
+      ptz_position:
+        $ref: "#/definitions/PTZVector"
+
+  MoveStatus:
+    type: string
+    enum:
+      - IDLE
+      - MOVING
+      - UNKNOWN
+
+  PTZMoveStatus:
+    type: object
+    properties:
+      pan_tilt:
+        $ref: "#/definitions/MoveStatus"
+      zoom:
+        $ref: "#/definitions/MoveStatus"
+
+  PTZStatus:
+    type: object
+    properties:
+      position:
+        $ref: "#/definitions/PTZVector"
+      move_status:
+        $ref: "#/definitions/PTZMoveStatus"
+      error:
+        type: string
+      utc_time:
+        type: integer
+
+  PTZCapabilities:
+    type: object
+    properties:
+      e_flip:
+        type: boolean
+      reverse:
+        type: boolean
+      get_compatible_configurations:
+        type: boolean
+      move_status:
+        type: boolean
+      status_position:
+        type: boolean
+
+  FRange:
+    type: object
+    properties:
+      min:
+        type: number
+        format: float
+      max:
+        type: number
+        format: float
+
+  Space2DDescriptionRange:
+    type: object
+    properties:
+      uri:
+        type: string
+      x_range:
+        $ref: "#/definitions/FRange"
+      y_range:
+        $ref: "#/definitions/FRange"
+
+  Space1DDescriptionRange:
+    type: object
+    properties:
+      uri:
+        type: string
+      x_range:
+        $ref: "#/definitions/FRange"
+
+  PTZSpaces:
+    type: object
+    properties:
+      absolute_pan_tilt_position_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space2DDescriptionRange"
+      absolute_zoom_position_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space1DDescriptionRange"
+      relative_pantilt_translation_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space2DDescriptionRange"
+      relative_zoom_translation_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space1DDescriptionRange"
+      continuous_pantilt_velocity_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space2DDescriptionRange"
+      continuous_zoom_velocity_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space1DDescriptionRange"
+      pantilt_speed_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space1DDescriptionRange"
+      zoom_speed_space:
+        type: array
+        items:
+          $ref: "#/definitions/Space1DDescriptionRange"
+
+  PTZNode:
+    type: object
+    properties:
+      name:
+        type: string
+      supported_ptz_spaces:
+        $ref: "#/definitions/PTZSpaces"
+      maximum_number_of_presets:
+        type: integer
+      home_supported:
+        type: boolean
+      auxiliary_commands:
+        type: array
+        items:
+          type: string
+      fixed_home_position:
+        type: boolean
+
+  DeviceInformation:
+    type: object
+    properties:
+      firmaware:
+        type: string
+      hardware:
+        type: string
+      manufacture:
+        type: string
+      model:
+        type: string
+      serial:
+        type: string
+
+  StreamType:
+    type: string
+    enum:
+      - RTP_UNICAST
+      - RTP_MULTICAST
+
+  TransportProtocol:
+    type: string
+    enum:
+      - UDP
+      - TCP
+      - RTSP
+      - HTTP
+
+  StreamUrl:
+    type: object
+    properties:
+      stream_type:
+        $ref: "#/definitions/StreamType"
+      transport_protocol:
+        $ref: "#/definitions/TransportProtocol"
+
+  MediaUri:
+    type: object
+    properties:
+      uri:
+        type: string
+      invalid_after_connect:
+        type: boolean
+      invalid_after_reboot:
+        type: boolean
+      timeout:
+        type: string
+
+  MulticastConfiguration:
+    type: object
+    properties:
+      ipv4_address:
+        type: string
+      port:
+        type: integer
+      ttl:
+        type: integer
+      auto_start:
+        type: boolean
+
+  H264Profile:
+      type: string
+      enum:
+        - BASELINE
+        - MAIN
+        - EXTENDED
+        - HIGH
+
+  H264Configuration:
+    type: object
+    properties:
+      gov_length:
+        type: integer
+      mpeg4_profile:
+        $ref: "#/definitions/H264Profile"
+
+  Mpeg4Profile:
+    type: string
+    enum:
+      - Mpeg4Profile
+      - ASP
+
+  Mpeg4Configuration:
+    type: object
+    properties:
+      gov_length:
+        type: integer
+      mpeg4_profile:
+        $ref: "#/definitions/Mpeg4Profile"
+
+  VideoRateControl:
+    type: object
+    properties:
+      framerate_limit:
+        type: integer
+      encoding_interval:
+        type: integer
+      bitrate_limit:
+        type: integer
+
+  VideoResolution:
+    type: object
+    properties:
+      width:
+        type: integer
+      height:
+        type: integer
+
+  VideoEncoding:
+    type: string
+    enum:
+      - JPEG
+      - MPEG4
+      - H264
+
+  IntRectangle:
+    type: object
+    properties:
+      x:
+        type: integer
+      y:
+        type: integer
+      width:
+        type: integer
+      height:
+        type: integer
+
+  VideoSourceConfiguration:
+    type: object
+    properties:
+      source_token:
+        type: string
+      bounds:
+        $ref: "#/definitions/IntRectangle"
+
+  AudioSourceConfiguration:
+    type: object
+    properties:
+      source_token:
+        type: string
+
+  VideoEncoderConfiguration:
+    type: object
+    properties:
+      video_encoding:
+        $ref: "#/definitions/VideoEncoding"
+      video_resolution:
+        $ref: "#/definitions/VideoResolution"
+      quality:
+        type: number
+        format: float
+      video_rate_control:
+        $ref: "#/definitions/VideoRateControl"
+      mpeg4_configuration:
+        $ref: "#/definitions/Mpeg4Configuration"
+      h264_configuration:
+        $ref: "#/definitions/H264Configuration"
+      multicast_configuration:
+        $ref: "#/definitions/MulticastConfiguration"
+      session_timeout:
+        type: string
+
+  PTZConfiguration:
+    type: object
+    properties:
+      node_token:
+        type: string
+      default_absolute_pant_tilt_position_space:
+        type: string
+      default_absolute_zoom_position_space:
+        type: string
+      default_relative_pan_tilt_translation_space:
+        type: string
+      default_relative_zoom_translation_space:
+        type: string
+      default_continuous_pan_tilt_velocity_space:
+        type: string
+      default_continuous_zoom_velocity_space:
+        type: string
+      default_ptz_speed:
+        $ref: "#/definitions/PTZSpeed"
+      default_ptz_timeout:
+        type: string
+      pan_tilt_limits:
+        $ref: "#/definitions/PanTiltLimits"
+      zoom_limits:
+        $ref: "#/definitions/ZoomLimits"
+
+  Profile:
+    type: object
+    properties:
+      name:
+        type: string
+      token:
+        type: string
+      fixed:
+        type: boolean
+      video_source_configuration:
+        $ref: "#/definitions/VideoSourceConfiguration"
+      audio_source_configuration:
+        $ref: "#/definitions/AudioSourceConfiguration"
+      video_encoder_configuration:
+        $ref: "#/definitions/VideoEncoderConfiguration"
+      ptz_configuration:
+        $ref: "#/definitions/PTZConfiguration"

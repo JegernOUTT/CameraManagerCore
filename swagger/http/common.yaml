@@ -1,0 +1,427 @@
+swagger: '2.0'
+
+info:
+  title: CameraManagerCore
+  description: Описание common схемы
+  version: "0.1.0"
+
+host: "10.10.20.14:8085"
+schemes: ["http"]
+
+paths:
+  /common/get_all_cameras:
+    get:
+      description: Получение всех камер
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+          
+      responses:
+        200:
+          description: Массив камер
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_my_cameras:
+    get:
+      description: Получение камер, принадлежащих пользователю
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Массив камер
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_all_permissions:
+    get:
+      description: Получение всех разрешений
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Массив разрешений
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_my_permissions:
+    get:
+      description: Получение разрешений, принадлежащих пользователю
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Массив разрешений
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PermissionModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_user:
+    get:
+      description: Получение объекта текущего пользователя
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Объект пользователя
+          schema:
+            $ref: "#/definitions/UserModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_settings:
+    get:
+      description: Получение текущих настроек
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Объект настроек
+          schema:
+            $ref: "#/definitions/SettingsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_sessions:
+    get:
+      description: Получение списка всех сессий
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Список сессий
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SessionsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+  /common/get_camera_actions:
+    get:
+      description: Получение списка проведенных взаимодействий с камерой
+
+      produces:
+        - application/json
+
+      parameters:
+        -
+          name: session_hash
+          in: header
+          description: Уникальная строка, иденцифицирующая сессию
+          required: true
+          type: string
+
+      responses:
+        200:
+          description: Массив взаимодействий с камерой
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CameraActionsModel"
+        401:
+          description: Сессия со входным session_hash не существует в системе
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        403:
+          description: У текущего пользователя нет необходимых разрешений
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        400:
+          description: Не удалось найти все обязательные входные параметры
+          schema:
+            $ref: "#/definitions/OperationResponse"
+        500:
+          description: Неизвестная ошибка
+          schema:
+            $ref: "#/definitions/OperationResponse"
+
+definitions:
+  CameraModel:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: Идентификатор камеры
+
+      name:
+        type: string
+        description: Имя камеры
+
+      url:
+        type: string
+        description: Url адрес камеры
+
+      login:
+        type: string
+        description: Логин для взаимодействия с камерой
+
+      password:
+        type: string
+        description: Пароль для взаимодействия с камерой
+
+      interaction_id:
+        type: integer
+        description: Тип взаимодействия
+
+      idle_timeout_sec:
+        type: integer
+        description: Время ожидания для перехода в нормальное положение
+
+      on_idle_action:
+        type: string
+        description: Действие для перехода в нормальное положение
+
+  PermissionModel:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Название разрешения
+      regex_url:
+        type: string
+        description: Regex паттерн
+
+  UserModel:
+    type: object
+    properties:
+      name:
+        type: string
+        description: Имя пользователя
+      password:
+        type: string
+        description: Пароль пользователя
+      event_categories:
+        type: string
+        description: Доступные категории событий
+
+  SettingsModel:
+    type: object
+    properties:
+      registration:
+        type: array
+        items:
+          type: integer
+          format: uint8
+        description: Бинарный регистрационный файл
+      http_port:
+        type: integer
+        description: Порт для http rest сервера
+      ws_camera_port:
+        type: integer
+        description: Порт для ws_camera сервера
+      ws_model_port:
+        type: integer
+        description: Порт для ws_model сервера
+      ws_events_port:
+        type: integer
+        description: Порт для ws_events сервера
+
+  SessionsModel:
+    type: object
+    properties:
+      session_hash:
+        type: string
+        description: Уникальная строка, иденцифицирующая сессию
+      user_id:
+        type: integer
+        description: Номер пользователя
+      creation_time:
+        type: integer
+        description: Время создания сессии (unix time with ms)
+      destruction_time:
+        type: integer
+        description: Время уничтожения сессии (unix time with ms)
+
+  CameraActionsModel:
+    type: object
+    properties:
+      succeed:
+        type: boolean
+        description: Успех завершения взаимодействия
+      camera_id:
+        type: integer
+        description: Номер камеры
+      session_hash:
+        type: string
+        description: Взаимодействующая сессия
+      time:
+        type: integer
+        description: Время взаимодейсвия (unix time with ms)
+      action:
+        type: string
+        description: Взаимодействие (в json формате)
+
+
+  OperationResponse:
+    type: object
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
